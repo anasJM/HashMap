@@ -60,8 +60,30 @@ function hashMap() {
 
     }
 
-    return {
+    // get element from buckets
+    function get(key) {
+        // hash the key
+        const index = hash(key)
 
+        // out of bounds
+        if (index < 0 || index >= buckets.length) {
+            throw new Error("Trying to access index out of bounds");
+        }
+
+        const existing = buckets[index].find(element => element[0] === key)
+        return existing ? buckets[index][1] : null
+    }
+
+    // check if key exist in buckets
+    function has(key) {
+        const element = get(key)
+        return element === null ? false : true
+    }
+
+    return {
+        set,
+        get,
+        has,
     }
 }
 
