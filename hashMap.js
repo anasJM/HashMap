@@ -1,4 +1,4 @@
-function hashMap() {
+function HashMap() {
     let loadFactor = 0.75
     let capacity = 16
     let buckets = new Array(capacity).fill(null)
@@ -70,8 +70,12 @@ function hashMap() {
             throw new Error("Trying to access index out of bounds");
         }
 
-        const existing = buckets[index].find(element => element[0] === key)
-        return existing ? buckets[index][1] : null
+        let existing
+        if (buckets[index] !== null) {
+            existing = buckets[index].find(element => element[0] === key)
+        }
+
+        return existing ? existing[1] : null
     }
 
     // check if key exist in buckets
@@ -99,7 +103,7 @@ function hashMap() {
         buckets[index].splice(elementIndex, 1)
         size--
 
-        if (buckets.length === 0) {
+        if (buckets[index].length === 0) {
             buckets[index] = null
         }
 
@@ -123,9 +127,11 @@ function hashMap() {
         const allKeys = []
 
         buckets.forEach(bucket => {
-            bucket.forEach(element => {
-                allKeys.push(element[0])
-            })
+            if (bucket) {
+                bucket.forEach(element => {
+                    allKeys.push(element[0])
+                })
+            }
         });
 
         return allKeys
@@ -136,9 +142,11 @@ function hashMap() {
         const allValues = []
 
         buckets.forEach(bucket => {
-            bucket.forEach(element => {
-                allValues.push(element[1])
-            })
+            if (bucket) {
+                bucket.forEach(element => {
+                    allValues.push(element[1])
+                })
+            }
         });
 
         return allValues
@@ -149,12 +157,33 @@ function hashMap() {
         const allPairs = []
 
         buckets.forEach(bucket => {
-            bucket.forEach(element => {
-                allPairs.push([element[0], element[1]])
-            })
+            if (bucket) {
+                bucket.forEach(element => {
+                    allPairs.push([element[0], element[1]])
+                })
+            }
         });
 
         return allPairs
+    }
+
+    function resize() {
+        // store the old buckets
+        const oldBuckets = buckets
+        // double the capacity
+        capacity = capacity * 2
+        // reset the buckets and the size
+        buckets = new Array(capacity).fill(null)
+        size = 0
+
+        for (const bucket of oldBuckets) {
+            if (bucket) {
+                for (const [key, value] of bucket) {
+                    set(key, value)
+                }
+            }
+        }
+
     }
 
     return {
@@ -162,7 +191,12 @@ function hashMap() {
         get,
         has,
         remove,
+        length,
+        clear,
+        keys,
+        values,
+        entries,
     }
 }
 
-export { hashMap }
+export default HashMap
