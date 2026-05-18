@@ -6,6 +6,8 @@ function hashMap() {
 
     // hash function
     function hash(key) {
+        if (typeof key !== 'string') throw new Error('Keys must be strings');
+
         let hashCode = 0;
         const primeNumber = 31;
 
@@ -24,9 +26,43 @@ function hashMap() {
             throw new Error("Trying to access index out of bounds");
         }
 
-        return this.buckets[index];
+        return buckets[index];
     }
 
+    // set value to bucket
+    function set(key, value) {
+        const index = hash(key)
+
+        // out of bounds
+        if (index < 0 || index >= buckets.length) {
+            throw new Error("Trying to access index out of bounds");
+        }
+
+        // If bucket is empty, start a new linked list
+        if (buckets[index] === null) {
+            buckets[index] = [[key, value]]
+            size++
+        } else {
+            // Bucket already has entries — check for collision
+            const existing = buckets[index].find(element => element[0] === key)
+            if (existing) {
+                existing[1] = value
+            } else {
+                buckets[index].push([key, value])
+                size++
+            }
+        }
+
+        // Check if we need to grow
+        if ((size / capacity) > loadFactor) {
+            resize()
+        }
+
+    }
+
+    return {
+
+    }
 }
 
 export { hashMap }
