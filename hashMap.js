@@ -107,10 +107,61 @@ function hashMap() {
 
     }
 
+    // size of buckets
+    function length() {
+        return size
+    }
+
+    // clear all the entries in the hashmap
+    function clear() {
+        buckets = new Array(capacity).fill(null)
+        size = 0
+    }
+
+    // return all the keys in the hashmap
+    function keys() {
+        const allKeys = []
+
+        buckets.forEach(bucket => {
+            bucket.forEach(element => {
+                allKeys.push(element[0])
+            })
+        });
+
+        return allKeys
+    }
+
+    // return all the values in the hashmap
+    function values() {
+        const allValues = []
+
+        buckets.forEach(bucket => {
+            bucket.forEach(element => {
+                allValues.push(element[1])
+            })
+        });
+
+        return allValues
+    }
+
+    // return all pairs (key, value)
+    function entries() {
+        const allPairs = []
+
+        buckets.forEach(bucket => {
+            bucket.forEach(element => {
+                allPairs.push([element[0], element[1]])
+            })
+        });
+
+        return allPairs
+    }
+
     return {
         set,
         get,
         has,
+        remove,
     }
 }
 
