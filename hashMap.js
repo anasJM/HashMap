@@ -80,6 +80,33 @@ function hashMap() {
         return element === null ? false : true
     }
 
+    // remove element from buckets
+    function remove(key) {
+        // hash the key
+        const index = hash(key)
+
+        // out of bounds
+        if (index < 0 || index >= buckets.length) {
+            throw new Error("Trying to access index out of bounds");
+        }
+
+        const elementIndex = buckets[index].findIndex(element => element[0] === key)
+
+        if (elementIndex === -1) {
+            return false
+        }
+
+        buckets[index].splice(elementIndex, 1)
+        size--
+
+        if (buckets.length === 0) {
+            buckets[index] = null
+        }
+
+        return true
+
+    }
+
     return {
         set,
         get,
